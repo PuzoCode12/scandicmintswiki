@@ -1,0 +1,24 @@
+backend:
+  name: github
+  repo: ВАШ-ЛОГИН/ИМЯ-РЕПОЗИТОРИЯ
+  branch: main
+  base_url: https://АДРЕС-ПОСРЕДНИКА-ВХОДА
+media_folder: public/photos
+public_folder: /photos
+collections:
+  - name: candies
+    label: Драже
+    label_singular: драже
+    folder: src/content/candies
+    extension: md
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: Название, name: title, widget: string}
+      - {label: Производитель, name: brand, widget: string}
+      - {label: Линейка, name: line, widget: string, required: false}
+      - {label: Вкусы, name: flavors, widget: list, required: false}
+      - {label: Коллекция, name: collection, widget: string, required: false}
+      - {label: Дата, name: date, widget: datetime, time_format: false, date_format: YYYY-MM-DD}
+      - {label: Фото, name: photos, widget: list, field: {label: Фото, name: photo, widget: image}}
+      - {label: Текст, name: body, widget: markdown}

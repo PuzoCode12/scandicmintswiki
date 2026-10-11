@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+const all = (await getCollection('candies')).sort((a, b) => b.data.date - a.data.date || b.id.localeCompare(a.id));
+const brands = [...new Set(all.map(c => c.data.brand))];
+const lines = [...new Set(all.map(c => c.data.line).filter(Boolean))];
+---
+<Base>
+<div class="wrap">
+<section class="hero">
+<h1>Энциклопедия мятных драже</h1>
+<p>Упаковки, линейки, вкусы и места, где их можно найти. Собрано участниками чата фанатов.</p>
+</section>
+<div class="tools">
+<input id="q" type="search" placeholder="Название, вкус или магазин" aria-label="Поиск">
+<select id="brand" aria-label="Производитель"><option value="">Все производители</option>{brands.map(b => <option>{b}</option>)}</select>
+<select id="line" aria-label="Линейка"><option value="">Все линейки</option>{lines.map(l => <option>{l}</option>)}</select>
+</div>
+<p class="count" id="count" aria-live="polite"></p>
+<div class="grid" id="grid">
+{all.map(c => (
+<a class="card" href={`/candy/${c.id}/`} data-t={(c.data.title + ' ' + c.data.flavors.join(' ') + ' ' + c.body).toLowerCase()} data-b={c.data.brand} data-l={c.data.line}>
+{c.data.photos[0] && <img src={c.data.photos[0]} alt={c.data.title} loading="lazy" width="300" height="300">}
+<div><b>{c.data.title}</b>{c.data.line && <span class="chip">{c.data.line}</span>}</div>
+</a>
+))}
+</div>
+</div>
+<script is:inline>
+const q = document.getElementById('q'), b = document.getElementById('brand'), l = document.getElementById('line'), n = document.getElementById('count');
+const cards = [...document.querySelectorAll('.card')];
+function run() {
+  const t = q.value.trim().toLowerCase(); let shown = 0;
+  cards.forEach(c => {
+    const ok = (!t || c.dataset.t.includes(t)) && (!b.value || c.dataset.b === b.value) && (!l.value || c.dataset.l === l.value);
+    c.hidden = !ok; if (ok) shown++;
+  });
+  n.textContent = 'Найдено: ' + shown + ' из ' + cards.length;
+}
+[q, b, l].forEach(e => e.addEventListener('input', run));
+run();
+</script>
+</Base>

@@ -1,0 +1,27 @@
+---
+import '../styles/global.css';
+const { title = 'Scandic Mints Wiki', description = 'Фанатская энциклопедия мятных драже: упаковки, линейки, вкусы и где их найти.' } = Astro.props;
+const path = Astro.url.pathname;
+const links = { official: 'https://scandicmints.com', chat: 'https://t.me/+qDSMlv8vIGpjOWEy', channel: 'https://t.me/scandicskinz', tiktok: 'https://www.tiktok.com/@scinz.scandic.fan' };
+---
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{title}</title>
+<meta name="description" content={description}>
+</head>
+<body>
+<header><div class="wrap">
+<a class="logo" href="/">Scandic<span>Mints</span>Wiki</a>
+<nav><a href="/" aria-current={path === '/' ? 'page' : undefined}>Каталог</a><a href="/about/" aria-current={path.startsWith('/about') ? 'page' : undefined}>О проекте</a></nav>
+</div></header>
+<div class="zig"></div>
+<main><slot /></main>
+<footer><div class="wrap">
+<p>Неофициальный фанатский проект, не связан с производителем.</p>
+<p><a href={links.official}>Официальный сайт</a> · <a href={links.chat}>Чат фанатов</a> · <a href={links.channel}>Telegram-канал</a> · <a href={links.tiktok}>TikTok</a></p>
+</div></footer>
+</body>
+</html>

@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+export async function getStaticPaths() {
+  return (await getCollection('candies')).map(c => ({ params: { slug: c.id }, props: { c } }));
+}
+const { c } = Astro.props;
+const { Content } = await render(c);
+---
+<Base title={`${c.data.title} — Scandic Mints Wiki`} description={`${c.data.title}: вкусы, где найти и информация.`}>
+<div class="wrap">
+<a class="back" href="/">← Все драже</a>
+<article class="bubble">
+{c.data.photos.map(p => <img src={p} alt={c.data.title}>)}
+<div class="txt"><Content /></div>
+{c.data.collection && <div class="meta"><span class="chip">{c.data.collection}</span></div>}
+</article>
+</div>
+</Base>
